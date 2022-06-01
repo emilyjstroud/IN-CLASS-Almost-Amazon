@@ -37,12 +37,12 @@ const formEvents = () => {
     // FIXME: ADD CLICK EVENT FOR SUBMITTING FORM FOR ADDING AN AUTHOR
     if (e.target.id.includes('submit-author')) {
       console.warn('add author button clicked', e.target.id);
-      const authorObj = {
+      const authorObject = {
         first_name: document.querySelector('#first_name').value,
         last_name: document.querySelector('#last_name').value,
         email: document.querySelector('#email').value,
       };
-      createAuthor(authorObj).then((authorsArray) => showAuthors(authorsArray));
+      createAuthor(authorObject).then((authorsArray) => showAuthors(authorsArray));
     }
     // FIXME:ADD CLICK EVENT FOR EDITING AN AUTHOR
     if (e.target.id.includes('update-author')) {

@@ -1,12 +1,13 @@
-import { deleteBook } from '../../api/bookData';
+import { deleteBook, getSingleBook } from '../../api/bookData';
 import { showBooks } from '../components/pages/books';
-import { deleteAuthorBooks } from '../../api/mergedData';
+import { deleteAuthorBooks, viewBookDetails } from '../../api/mergedData';
 // import { deleteSingleAuthor } from '../../api/authorData';
 import { showAuthors } from '../components/pages/authors';
 import addBookForm from '../components/forms/addBookForm';
 import addAuthorForm from '../components/forms/addAuthorForm';
 import { updateAuthor } from '../../api/authorData';
-import selectAuthor from '../components/forms/selectAuthor';
+// import selectAuthor from '../components/forms/selectAuthor';
+import viewBook from '../components/pages/viewBook';
 // import { showAuthors } from '../components/pages/authors';
 
 const domEvents = () => {
@@ -23,22 +24,22 @@ const domEvents = () => {
 
     // TODO: CLICK EVENT FOR SHOWING FORM FOR ADDING A BOOK
     if (e.target.id.includes('add-book-btn')) {
-      console.warn('ADD BOOK');
       addBookForm();
     }
 
     // TODO: CLICK EVENT EDITING/UPDATING A BOOK
     if (e.target.id.includes('edit-book-btn')) {
       console.warn('EDIT BOOK', e.target.id);
-      console.warn(e.target.id.split('--'));
+      const [, firebaseKey] = e.target.id.split('--');
+      getSingleBook(firebaseKey).then((bookObj) => addBookForm(bookObj));
     }
     // TODO: CLICK EVENT FOR VIEW BOOK DETAILS
     if (e.target.id.includes('view-book-btn')) {
-      // const [, bookFirebaseKey] = e.target.id.split('--');
+      const [, bookFirebaseKey] = e.target.id.split('--');
 
-      // viewBookDetails(bookFirebaseKey).then((bookAuthorObject) => viewBookDetails(bookAuthorObject));
-      console.warn('VIEW BOOK BUTTON', e.target.id);
-      selectAuthor();
+      viewBookDetails(bookFirebaseKey).then((bookAuthorObject) => viewBook(bookAuthorObject));
+      // console.warn('VIEW BOOK BUTTON', e.target.id);
+      // viewBook();
     }
 
     // FIXME: ADD CLICK EVENT FOR DELETING AN AUTHOR

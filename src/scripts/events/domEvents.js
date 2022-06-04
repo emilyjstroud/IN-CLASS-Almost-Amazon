@@ -5,12 +5,12 @@ import { deleteAuthorBooks, viewBookDetails } from '../../api/mergedData';
 import { showAuthors } from '../components/pages/authors';
 import addBookForm from '../components/forms/addBookForm';
 import addAuthorForm from '../components/forms/addAuthorForm';
-import { updateAuthor } from '../../api/authorData';
+import { getSingleAuthor } from '../../api/authorData';
 // import selectAuthor from '../components/forms/selectAuthor';
 import viewBook from '../components/pages/viewBook';
 // import { showAuthors } from '../components/pages/authors';
 
-const domEvents = () => {
+const domEvents = (uid) => {
   document.querySelector('#main-container').addEventListener('click', (e) => {
     // TODO: CLICK EVENT FOR DELETING A BOOK
     if (e.target.id.includes('delete-book')) {
@@ -18,28 +18,26 @@ const domEvents = () => {
       if (window.confirm('Want to delete?')) {
         const [, firebaseKey] = e.target.id.split('--');
 
-        deleteBook(firebaseKey).then((booksArray) => showBooks(booksArray));
+        deleteBook(firebaseKey, uid).then((booksArray) => showBooks(booksArray));
       }
     }
 
     // TODO: CLICK EVENT FOR SHOWING FORM FOR ADDING A BOOK
     if (e.target.id.includes('add-book-btn')) {
-      addBookForm();
+      addBookForm({}, uid);
     }
 
     // TODO: CLICK EVENT EDITING/UPDATING A BOOK
     if (e.target.id.includes('edit-book-btn')) {
       console.warn('EDIT BOOK', e.target.id);
       const [, firebaseKey] = e.target.id.split('--');
-      getSingleBook(firebaseKey).then((bookObj) => addBookForm(bookObj));
+      getSingleBook(firebaseKey).then((bookObj) => addBookForm(uid, bookObj));
     }
     // TODO: CLICK EVENT FOR VIEW BOOK DETAILS
     if (e.target.id.includes('view-book-btn')) {
       const [, bookFirebaseKey] = e.target.id.split('--');
 
       viewBookDetails(bookFirebaseKey).then((bookAuthorObject) => viewBook(bookAuthorObject));
-      // console.warn('VIEW BOOK BUTTON', e.target.id);
-      // viewBook();
     }
 
     // FIXME: ADD CLICK EVENT FOR DELETING AN AUTHOR
@@ -48,7 +46,7 @@ const domEvents = () => {
       if (window.confirm('Want to delete?')) {
         console.warn('DELETE AUTHOR', e.target.id);
         const [, firebaseKey] = e.target.id.split('--');
-        deleteAuthorBooks(firebaseKey).then(showAuthors);
+        deleteAuthorBooks(firebaseKey, uid).then(showAuthors);
         // deleteSingleAuthor(firebaseKey).then((authorsArray) => showAuthors(authorsArray));
       }
     }
@@ -60,8 +58,9 @@ const domEvents = () => {
     }
     // FIXME: ADD CLICK EVENT FOR EDITING AN AUTHOR
     if (e.target.id.includes('update-author')) {
-      console.warn('UPDATE AUTHOR');
-      updateAuthor();
+      const [, firebaseKey] = e.target.id.split('--');
+
+      getSingleAuthor(firebaseKey).then((authorObj) => addAuthorForm(authorObj));
     }
   });
 };
